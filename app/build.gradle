@@ -81,8 +81,7 @@ dependencies {
     implementation "com.github.codekidX:storage-chooser:$codekidX_storage_chooser"
     implementation "com.jakewharton:process-phoenix:$process_phoenix"
     implementation 'com.commonsware.cwac:anddown:0.4.0'
-
-    //implementation "com.evernote:android-job:$evernote_android_job"
+    implementation "android.arch.work:work-runtime:$work_manager"
 
     //Sectioned recyclerview
     implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:$sectionedrecyclerviewadapter"

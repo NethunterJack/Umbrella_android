@@ -101,7 +101,7 @@ ext {
     markdown_view_version = '0.19.0'
     codekidX_storage_chooser = '2.0.4.2'
     process_phoenix = '2.0.0'
-    evernote_android_job = '1.2.6'
+    work_manager = "1.0.0-alpha12"
     sectionedrecyclerviewadapter = '1.2.0'
     calligraphy3 = '3.0.0'
     viewpump = '1.0.0'

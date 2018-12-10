@@ -1,5 +1,7 @@
 package org.secfirst.umbrella.whitelabel.feature.account.presenter
 
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.raizlabs.android.dbflow.config.FlowManager
 import org.apache.commons.io.FileUtils
 import org.secfirst.umbrella.whitelabel.UmbrellaApplication
@@ -12,9 +14,12 @@ import org.secfirst.umbrella.whitelabel.feature.account.interactor.AccountBaseIn
 import org.secfirst.umbrella.whitelabel.feature.account.view.AccountView
 import org.secfirst.umbrella.whitelabel.feature.base.presenter.BasePresenterImp
 import org.secfirst.umbrella.whitelabel.misc.AppExecutors.Companion.uiContext
+import org.secfirst.umbrella.whitelabel.misc.getDigitsFrom
 import org.secfirst.umbrella.whitelabel.misc.launchSilent
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class AccountPresenterImp<V : AccountView, I : AccountBaseInteractor> @Inject constructor(
         interactor: I) : BasePresenterImp<V, I>(
@@ -92,9 +97,22 @@ class AccountPresenterImp<V : AccountView, I : AccountBaseInteractor> @Inject co
         }
     }
 
-    override fun submitPutRefreshInterval(position: Int) {
+    override fun submitPutRefreshInterval(position: Int, refreshIntervalTime: String) {
         launchSilent(uiContext) {
+            val mWorkManager = WorkManager.getInstance()
+            val time = refreshIntervalTime.getDigitsFrom()
+            val workBuilder = PeriodicWorkRequest
+                    .Builder(NotificationWorker::class.java, 20, defineTime(time))
+            val myWork = workBuilder.build()
+            mWorkManager.enqueue(myWork)
             interactor?.putRefreshInterval(position)
         }
+    }
+
+    private fun defineTime(time: Long): TimeUnit {
+        return if (time > 60)
+            TimeUnit.HOURS
+        else
+            TimeUnit.MINUTES
     }
 }

@@ -254,7 +254,7 @@ class SettingsController : BaseController(), AccountView, ContentView, TentView,
     }
 
     override fun onRefreshIntervalSuccess(selectedPosition: Int, selectedInterval: String) {
-        presenter.submitPutRefreshInterval(selectedPosition)
+        presenter.submitPutRefreshInterval(selectedPosition, selectedInterval)
         mainView.settingsLabelRefreshInterval.text = refreshIntervalView.refreshInterval.selectedItem.toString()
     }
 
@@ -288,12 +288,9 @@ class SettingsController : BaseController(), AccountView, ContentView, TentView,
 
     override fun onCleanDatabaseSuccess() = presentContent.manageContent()
 
-    private fun exportDataOk() {
-        presenter.submitExportDatabase(destinationPath, getFilename(), isWipeData)
-    }
+    private fun exportDataOk() = presenter.submitExportDatabase(destinationPath, getFilename(), isWipeData)
 
     private fun exportDataClose() = exportAlertDialog.dismiss()
-
 
     private fun wipeDataClick() {
         isWipeData = true

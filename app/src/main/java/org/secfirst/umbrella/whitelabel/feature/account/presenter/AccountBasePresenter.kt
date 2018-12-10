@@ -24,6 +24,6 @@ interface AccountBasePresenter<V : AccountView, I : AccountBaseInteractor> : Bas
 
     fun prepareView()
 
-    fun submitPutRefreshInterval(position: Int)
+    fun submitPutRefreshInterval(position: Int, refreshIntervalTime: String)
 
 }

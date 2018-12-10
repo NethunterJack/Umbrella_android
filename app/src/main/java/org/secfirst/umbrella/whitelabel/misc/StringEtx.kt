@@ -39,3 +39,7 @@ fun Long?.timestampToStringFormat(): String {
             .format(Date(timestamp * 1000))
 }
 
+fun String.getDigitsFrom(): Long {
+    val removeLetters = Regex("\\D")
+    return removeLetters.replace(this, "").toLong()
+}

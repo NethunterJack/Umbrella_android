@@ -27,9 +27,6 @@ class ApiHeader @Inject constructor(internal val publicApiHeader: PublicApiHeade
 interface ApiHelper {
 
     @GET(NetworkEndPoint.FEED_LIST)
-    fun getBlogApiCall(): Deferred<BlogResponse>
-
-    @GET(NetworkEndPoint.FEED_LIST)
     @Wrapped
     fun getFeedList(@Query("country") countryCode: String,
                     @Query("sources") sources: String,
