@@ -37,7 +37,6 @@ class ReaderPresenterImp<V : ReaderView, I : ReaderBaseInteractor>
                                    isFirstRequest: Boolean) {
         interactor?.let {
             launchSilent(uiContext) {
-
                 try {
                     val feedResponseBody = it.doFeedCall(feedLocation.iso2, getSelectedFeedSources(feedSources), "0").await()
                     val feedItemResponse = Gson().fromJson(feedResponseBody.string(), Array<FeedItemResponse>::class.java)
@@ -149,9 +148,9 @@ class ReaderPresenterImp<V : ReaderView, I : ReaderBaseInteractor>
 
     private fun getSelectedFeedSources(feedSources: List<FeedSource>): String {
         val selectedSources = feedSources.filter { it.lastChecked }
-        val codeSources = mutableListOf<Int>()
-        selectedSources.forEach { codeSources.add(it.code) }
-        return codeSources.joinToString(",")
+        val feedsCode = mutableListOf<Int>()
+        selectedSources.forEach { feedsCode.add(it.code) }
+        return feedsCode.joinToString(",")
     }
 
     private fun getRssFromAssert(): RefRSS {

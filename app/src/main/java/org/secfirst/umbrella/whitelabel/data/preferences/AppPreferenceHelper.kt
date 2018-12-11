@@ -12,19 +12,9 @@ class AppPreferenceHelper @Inject constructor(context: Context, @PreferenceInfo 
     companion object {
         private const val EXTRA_REFRESH_INTERVAL = "refresh_interval"
         private const val EXTRA_SKIP_PASSWORD = "skip_password"
-        private const val EXTRA_STORE_FEED_SOURCES = "feed_sources"
-        private const val EXTRA_STORE_LOCATION = "location"
         const val PREF_NAME = "umbrella.preference"
         const val EXTRA_LOGGED_IN = "is_logged_in"
     }
-
-    override fun setFeedSources(feedSources: String) = prefs.edit().putString(EXTRA_STORE_FEED_SOURCES, feedSources).commit()
-
-    override fun getFeedSources() = prefs.getString(EXTRA_STORE_FEED_SOURCES, "")
-
-    override fun setLocation(locationInfo: String) = prefs.edit().putString(EXTRA_STORE_LOCATION, locationInfo).commit()
-
-    override fun getLocation() = prefs.getString(EXTRA_STORE_LOCATION, "")
 
     override fun isLoggedIn() = prefs.edit().putBoolean(EXTRA_LOGGED_IN, false).commit()
 
@@ -53,12 +43,4 @@ interface PreferenceHelper {
     fun setRefreshInterval(position: Int): Boolean
 
     fun getRefreshInterval(): Int
-
-    fun setFeedSources(feedSources: String): Boolean
-
-    fun getFeedSources(): String
-
-    fun setLocation(locationInfo: String): Boolean
-
-    fun getLocation(): String
 }

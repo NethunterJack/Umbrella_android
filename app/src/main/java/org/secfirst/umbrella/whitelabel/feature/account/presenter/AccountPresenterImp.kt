@@ -1,5 +1,6 @@
 package org.secfirst.umbrella.whitelabel.feature.account.presenter
 
+import androidx.work.Data
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -99,14 +100,27 @@ class AccountPresenterImp<V : AccountView, I : AccountBaseInteractor> @Inject co
 
     override fun submitPutRefreshInterval(position: Int, refreshIntervalTime: String) {
         launchSilent(uiContext) {
-            val mWorkManager = WorkManager.getInstance()
+            val workManager = WorkManager.getInstance()
             val time = refreshIntervalTime.getDigitsFrom()
             val workBuilder = PeriodicWorkRequest
                     .Builder(NotificationWorker::class.java, 20, defineTime(time))
-            val myWork = workBuilder.build()
-            mWorkManager.enqueue(myWork)
+
+            workManager.enqueue(workBuilder
+                    .setInputData(makeDataFromWorker())
+                    .build())
             interactor?.putRefreshInterval(position)
         }
+    }
+
+    private suspend fun makeDataFromWorker(): Data {
+        val feedSources = interactor?.fetchFeedSources()?.filter { it.lastChecked }
+        val feedsCode = mutableListOf<Int>()
+        feedSources?.forEach { feedsCode.add(it.code) }
+        val location = interactor?.fetchFeedLocation()?.iso2
+        return Data.Builder()
+                .putString(NotificationWorker.EXTRA_COUNTRY_CODE, location)
+                .putString(NotificationWorker.EXTRA_SOURCES, feedsCode.joinToString(","))
+                .build()
     }
 
     private fun defineTime(time: Long): TimeUnit {
