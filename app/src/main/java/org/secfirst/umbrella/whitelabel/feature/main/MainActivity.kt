@@ -15,6 +15,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.main_view.*
 import org.secfirst.umbrella.whitelabel.R
 import org.secfirst.umbrella.whitelabel.data.disk.TentConfig.Companion.isRepCreate
+import org.secfirst.umbrella.whitelabel.feature.account.presenter.NotificationWorker
 import org.secfirst.umbrella.whitelabel.feature.account.view.AccountController
 import org.secfirst.umbrella.whitelabel.feature.checklist.view.controller.HostChecklistController
 import org.secfirst.umbrella.whitelabel.feature.form.view.controller.HostFormController
@@ -28,6 +29,7 @@ import org.secfirst.umbrella.whitelabel.misc.removeShiftMode
 class MainActivity : AppCompatActivity() {
 
     lateinit var router: Router
+    private var isNotificationClicked = false
 
     private fun performDI() = AndroidInjection.inject(this)
 
@@ -35,12 +37,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_view)
         performDI()
+        isNotificationClicked = intent.getBooleanExtra(NotificationWorker.NOTIFICATION_CLICKED, false)
         initRoute(savedInstanceState)
     }
 
     override fun onResume() {
-        super.onResume()
         ShakeDetector.start()
+        super.onResume()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,6 +62,10 @@ class MainActivity : AppCompatActivity() {
         if (!router.hasRootController() && isRepCreate()) {
             router.setRoot(RouterTransaction.with(HostChecklistController()))
             navigation.menu.getItem(2).isChecked = true
+            if (isNotificationClicked) {
+                router.setRoot(RouterTransaction.with(HostReaderController()))
+                navigation.menu.getItem(0).isChecked = true
+            }
         } else router.setRoot(RouterTransaction.with(TourController()))
     }
 
